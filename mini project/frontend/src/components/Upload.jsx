@@ -12,15 +12,6 @@ export default function Upload({ setShares }) {
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select an image first");
-      return;
-    }
-    if (useAes && !password) {
-      alert("Please enter a password for encryption");
-      return;
-    }
-
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -86,14 +77,21 @@ export default function Upload({ setShares }) {
         </div>
 
         {useAes && (
-          <input
-            type="password"
-            placeholder="Enter secret password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: "10px", width: "250px", borderRadius: "6px", border: "1px solid var(--border)" }}
-            disabled={loading}
-          />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px" }}>
+            <input
+              type="password"
+              placeholder="Enter secret password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ padding: "10px", width: "250px", borderRadius: "6px", border: "1px solid var(--border)" }}
+              disabled={loading}
+            />
+            {!password && (
+              <span style={{ color: "#ff4d4d", fontSize: "0.85rem", fontWeight: "bold" }}>
+                enter password
+              </span>
+            )}
+          </div>
         )}
 
         <input
@@ -109,14 +107,14 @@ export default function Upload({ setShares }) {
           disabled={loading || !file || (useAes && !password)}
           style={{
             padding: "12px 40px",
-            backgroundColor: loading ? "#ccc" : "#aa3bff",
+            backgroundColor: (loading || !file || (useAes && !password)) ? "#ccc" : "#aa3bff",
             color: "white",
             border: "none",
             borderRadius: "6px",
-            cursor: loading ? "default" : "pointer",
+            cursor: (loading || !file || (useAes && !password)) ? "default" : "pointer",
             fontWeight: "bold",
             transition: "all 0.3s",
-            boxShadow: "0 4px 12px rgba(170, 59, 255, 0.3)"
+            boxShadow: (loading || !file || (useAes && !password)) ? "none" : "0 4px 12px rgba(170, 59, 255, 0.3)"
           }}
         >
           {loading ? "Processing..." : (useAes ? "Encrypt & Split" : "Split Image")}
